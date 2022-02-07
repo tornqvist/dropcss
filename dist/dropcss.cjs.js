@@ -481,7 +481,7 @@ function nth(a, b, pos) {
 	return pos <= b && pos % a === bMod;
 }
 
-const pseudoClasses = /not|is/;
+const pseudoClasses = /not|is|has/;
 
 // assumes stripPseudos(sel); has already been called
 function parse(sel) {
@@ -711,6 +711,11 @@ function find(m, ctx) {
 						break;
 					case 'is':
 						res = find(val, {node: ctx.node, idx: val.length - 1});
+						break;
+					case 'has':
+						res = ctx.node.childNodes.some(
+							(node) => find(val, { node, idx: val.length - 1})
+						);
 						break;
 					case 'first-child':
 						res = tidx == 0;
@@ -965,7 +970,7 @@ function postProc(out, shouldDrop, log, START) {
 
 const ATTRIBUTES = /\[([\w-]+)(?:(.?=)"?([^\]]*?)"?)?\]/i;
 
-const pseudoAssertable = /:(?:first|last|nth|only|not|is)\b/;
+const pseudoAssertable = /:(?:first|last|nth|only|not|is|has)\b/;
 
 const pseudoNonAssertableParenth = /:(?:lang)\([^)]*\)/g;
 
