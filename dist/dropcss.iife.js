@@ -482,7 +482,7 @@ var dropcss = (function () {
 		return pos <= b && pos % a === bMod;
 	}
 
-	const pseudoClasses = /not|is/;
+	const pseudoClasses = /not|is|has/;
 
 	// assumes stripPseudos(sel); has already been called
 	function parse(sel) {
@@ -712,6 +712,11 @@ var dropcss = (function () {
 							break;
 						case 'is':
 							res = find(val, {node: ctx.node, idx: val.length - 1});
+							break;
+						case 'has':
+							res = ctx.node.childNodes.some(
+								(node) => find(val, { node, idx: val.length - 1})
+							);
 							break;
 						case 'first-child':
 							res = tidx == 0;
@@ -966,7 +971,7 @@ var dropcss = (function () {
 
 	const ATTRIBUTES = /\[([\w-]+)(?:(.?=)"?([^\]]*?)"?)?\]/i;
 
-	const pseudoAssertable = /:(?:first|last|nth|only|not|is)\b/;
+	const pseudoAssertable = /:(?:first|last|nth|only|not|is|has)\b/;
 
 	const pseudoNonAssertableParenth = /:(?:lang)\([^)]*\)/g;
 
